@@ -37,20 +37,28 @@ def gamereport():
             db.close()
             return jsonify("duplicate report, match already confirmed."), 400
         else:
+            #match confirmation
             knownMatch.confirmed = True
             knownMatch.save()
 
-            winner = ModeledPlayer.get_or_create(knownMatch.winner_steamId)
-            loser = ModeledPlayer.get_or_create(knownMatch.loser_steamId)
-
+            print(knownMatch.winner_steamId, knownMatch.loser_steamId)
+            winner, wcreated = ModeledPlayer.get_or_create(steamId=knownMatch.winner_steamId)
+            loser, lcreated = ModeledPlayer.get_or_create(steamId=knownMatch.loser_steamId)
             newRatings = CalculateRank(winner.rating, loser.rating)
-            winner.rating = newRatings[0]
-            loser.rating = newRatings[1]
-            
+            winner.rating = round(newRatings[0])
+            loser.rating = round(newRatings[1])
+            winner.lastActive = datetime.datetime.now()
+            loser.lastActive = datetime.datetime.now()
+            winner.save()
+            loser.save()
 
-
+            results = {
+                "!msg": "match confirmed! here are the new ratings",
+                "winnerNewRating": winner.rating,
+                "loserNewRating": loser.rating,
+            }
             db.close()
-            return jsonify("match confirmed!"), 200
+            return jsonify(results), 200
     else:
         dbMatch.save(force_insert=True)
         db.close()

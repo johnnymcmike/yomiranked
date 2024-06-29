@@ -19,8 +19,8 @@ class Player(object):
 
 class ModeledPlayer(BaseModel):
     steamId = CharField(primary_key=True)
-    discordId = CharField()
-    rating = IntegerField()
+    discordId = CharField(default="none provided")
+    rating = IntegerField(default=1000)
     lastActive = DateTimeField(default=datetime.datetime.now)
 
 class PlayerSchema(Schema):
