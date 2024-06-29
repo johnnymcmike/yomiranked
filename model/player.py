@@ -21,13 +21,13 @@ class Player(object):
         )
 
 class DbPlayer(BaseModel):
-    steamId = CharField(primary_key=True)
+    steamId = IntegerField(primary_key=True)
     discordId = CharField(default="none provided")
     rating = IntegerField(default=1000)
     lastActive = DateTimeField(default=datetime.datetime.now)
 
 class PlayerSchema(Schema):
-    steamId = fields.Str(primary_key=True)
+    steamId = fields.Int()
     discordId = fields.Str(default="none provided")
     rating = fields.Int(default=1000)
     lastActive = fields.DateTime(default=datetime.datetime.now)

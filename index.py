@@ -15,7 +15,7 @@ def test():
 @app.route('/leaderboard', methods=['GET'])
 def leaderboard():
     amount = request.args.get('amount', default=10, type=int)
-    playerList = DbPlayer.select(DbPlayer.steamId).order_by(DbPlayer.rating.desc()).limit(amount)
+    playerList = DbPlayer.select(DbPlayer.steamId, DbPlayer.rating).order_by(DbPlayer.rating.desc()).limit(amount)
     #i'm not really a python guy so there may be a cooler, shorter way to do this part
     #i know c# could do this in one line with linq
     #lmk if you know anything
@@ -88,6 +88,13 @@ def gamereport():
 
 
 
-@app.route('/getsecret', methods=['GET'])
-def getsecret():
-    return "not yet implemented"
+@app.route('/getrank', methods=['GET'])
+def getrank():
+    playerId = request.args.get('player', default=-1, type=int)
+    if playerId == -1:
+        return jsonify("no player specified"), 400
+    else:
+        db.connect()
+        player, wcreated = DbPlayer.get_or_create(steamId=playerId)
+        db.close()
+        return jsonify(player.rating), 200
