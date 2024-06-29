@@ -22,7 +22,6 @@ def leaderboard():
         list.append(schema.dump(player))
     
 
-
     return jsonify(list), 200
 
 #JSON body for this one
