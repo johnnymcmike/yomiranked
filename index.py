@@ -16,15 +16,17 @@ def test():
 def leaderboard():
     amount = request.args.get('amount', default=10, type=int)
     playerList = DbPlayer.select(DbPlayer.steamId).order_by(DbPlayer.rating.desc()).limit(amount)
+    #i'm not really a python guy so there may be a cooler, shorter way to do this part
+    #i know c# could do this in one line with linq
+    #lmk if you know anything
     list = []
     schema = PlayerSchema()
     for player in playerList:
         list.append(schema.dump(player))
-    
 
     return jsonify(list), 200
 
-#JSON body for this one
+#need JSON body for this one
 @app.route('/gamereport', methods=['POST'])
 def gamereport():
     try:
@@ -47,6 +49,7 @@ def gamereport():
             knownMatch.confirmed = True
             knownMatch.save()
 
+            #need to assign it like this bc that function returns a tuple
             winner, wcreated = DbPlayer.get_or_create(steamId=knownMatch.winner_steamId)
             loser, lcreated = DbPlayer.get_or_create(steamId=knownMatch.loser_steamId)
             newRatings = CalculateRank(winner.rating, loser.rating)
@@ -65,7 +68,7 @@ def gamereport():
             db.close()
             return jsonify(results), 200
     else:
-        dbMatch.save(force_insert=True)
+        dbMatch.save(force_insert=True) #this param is required because we have a custom private key
 
         winner, wcreated = DbPlayer.get_or_create(steamId=dbMatch.winner_steamId)
         loser, lcreated = DbPlayer.get_or_create(steamId=dbMatch.loser_steamId)
