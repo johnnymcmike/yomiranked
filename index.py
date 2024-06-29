@@ -81,7 +81,7 @@ def gamereport():
                 "loserNewRating": loserHypotheticalRating,
             }
         
-        return jsonify(results),200
+        return jsonify(results),202
 
 
 
