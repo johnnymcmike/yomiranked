@@ -16,7 +16,7 @@ def test():
 def leaderboard():
     db.connect()
     amount = request.args.get('amount', default=10, type=int)
-    playerList = DbPlayer.select(DbPlayer.steamId, DbPlayer.rating).order_by(DbPlayer.rating.desc()).limit(amount)
+    playerList = DbPlayer.select(DbPlayer.steamId, DbPlayer.rating, DbPlayer.discordId).order_by(DbPlayer.rating.desc()).limit(amount)
     #i'm not really a python guy so there may be a cooler, shorter way to do this part
     #i know c# could do this in one line with linq
     #lmk if you know anything
