@@ -1,10 +1,8 @@
 from flask import Flask, jsonify, request
-
 from model.match import *
 from model.player import *
 from model.basics import db
-from rating.rank import WinProbability, CalculateRank
-
+from rating.rank import CalculateRank
 from marshmallow import ValidationError
 from peewee import *
 
@@ -16,7 +14,16 @@ def test():
 
 @app.route('/leaderboard', methods=['GET'])
 def leaderboard():
-    return "example string"
+    amount = request.args.get('amount', default=10, type=int)
+    playerList = DbPlayer.select(DbPlayer.steamId).order_by(DbPlayer.rating.desc()).limit(amount)
+    list = []
+    schema = PlayerSchema()
+    for player in playerList:
+        list.append(schema.dump(player))
+    
+
+
+    return jsonify(list), 200
 
 #JSON body for this one
 @app.route('/gamereport', methods=['POST'])
@@ -30,7 +37,7 @@ def gamereport():
 
     db.connect()
     dbMatch = match.ToDBObject()
-    knownMatch = ModeledMatch.get_or_none(dbMatch.rngSeed)
+    knownMatch = DbMatch.get_or_none(dbMatch.rngSeed)
 
     if knownMatch:
         if knownMatch.confirmed == True:
@@ -41,9 +48,8 @@ def gamereport():
             knownMatch.confirmed = True
             knownMatch.save()
 
-            print(knownMatch.winner_steamId, knownMatch.loser_steamId)
-            winner, wcreated = ModeledPlayer.get_or_create(steamId=knownMatch.winner_steamId)
-            loser, lcreated = ModeledPlayer.get_or_create(steamId=knownMatch.loser_steamId)
+            winner, wcreated = DbPlayer.get_or_create(steamId=knownMatch.winner_steamId)
+            loser, lcreated = DbPlayer.get_or_create(steamId=knownMatch.loser_steamId)
             newRatings = CalculateRank(winner.rating, loser.rating)
             winner.rating = round(newRatings[0])
             loser.rating = round(newRatings[1])
@@ -61,8 +67,22 @@ def gamereport():
             return jsonify(results), 200
     else:
         dbMatch.save(force_insert=True)
+
+        winner, wcreated = DbPlayer.get_or_create(steamId=dbMatch.winner_steamId)
+        loser, lcreated = DbPlayer.get_or_create(steamId=dbMatch.loser_steamId)
+        newRatings = CalculateRank(winner.rating, loser.rating)
+        #we read the DB for rating, but do NOT write anything, when we recieve an unconfirmed match
+        winnerHypotheticalRating = round(newRatings[0])
+        loserHypotheticalRating = round(newRatings[1])
         db.close()
-        return jsonify("match registered!"),200
+
+        results = {
+                "!msg": "match resgistered, but not yet confirmed. here are the potential ratings",
+                "winnerNewRating": winnerHypotheticalRating,
+                "loserNewRating": loserHypotheticalRating,
+            }
+        
+        return jsonify(results),200
 
 
 

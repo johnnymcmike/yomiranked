@@ -4,6 +4,10 @@ from peewee import *
 from model.basics import BaseModel, db
 import datetime
 
+#i'm not really sure whether having the database classes and the Player/Match classes separate makes any sense
+#if any smart code people are reading this feel free to suggest improvements
+#i'll accept PRs lol
+
 class Match(object):
     def __init__(self,  rngSeed, winner_steamId, loser_steamId, timestamp = datetime.datetime.now()):
         self.rngSeed = rngSeed
@@ -12,14 +16,14 @@ class Match(object):
         self.timestamp = timestamp
     
     def ToDBObject(self):
-        return ModeledMatch(
+        return DbMatch(
             rngSeed=self.rngSeed,
             winner_steamId=self.winner_steamId,
             loser_steamId=self.loser_steamId,
             timestamp=self.timestamp
         )
 
-class ModeledMatch(BaseModel):
+class DbMatch(BaseModel):
     rngSeed = IntegerField(primary_key=True)
     winner_steamId = CharField()
     loser_steamId = CharField()
