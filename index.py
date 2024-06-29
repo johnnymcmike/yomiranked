@@ -87,8 +87,4 @@ def gamereport():
 
 @app.route('/getsecret', methods=['GET'])
 def getsecret():
-    return "secret"
-
-@app.route('/signup', methods=['POST'])
-def signup():
-    return "example string"
+    return "not yet implemented"
