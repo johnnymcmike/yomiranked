@@ -14,6 +14,7 @@ def test():
 
 @app.route('/leaderboard', methods=['GET'])
 def leaderboard():
+    db.connect()
     amount = request.args.get('amount', default=10, type=int)
     playerList = DbPlayer.select(DbPlayer.steamId, DbPlayer.rating).order_by(DbPlayer.rating.desc()).limit(amount)
     #i'm not really a python guy so there may be a cooler, shorter way to do this part
@@ -23,7 +24,7 @@ def leaderboard():
     schema = PlayerSchema()
     for player in playerList:
         list.append(schema.dump(player))
-
+    db.close()
     return jsonify(list), 200
 
 #need JSON body for this one
