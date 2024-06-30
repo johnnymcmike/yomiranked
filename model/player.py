@@ -29,7 +29,7 @@ class DbPlayer(BaseModel):
     steamName = CharField(default="nobody")
 
 class PlayerSchema(Schema):
-    steamId = fields.Int()
+    steamId = fields.Str()
     discordId = fields.Str(default="none provided")
     rating = fields.Int(default=1000)
     lastActive = fields.DateTime(default=datetime.datetime.now)
