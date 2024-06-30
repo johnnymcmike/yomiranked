@@ -7,11 +7,12 @@ import datetime
 #if any smart code people are reading this feel free to suggest improvements
 #i'll accept PRs lol
 class Player(object):
-    def __init__(self,  steamId, discordId, rating, lastActive = datetime.datetime.now()):
+    def __init__(self,  steamId, discordId, rating, lastActive = datetime.datetime.now(),steamName = "nobody"):
         self.steamId = steamId
         self.discordId = discordId
         self.rating = rating
         self.lastActive = lastActive
+        self.steamName = steamName
     
     def ToDBObject(self):
         return DbPlayer(
@@ -25,12 +26,14 @@ class DbPlayer(BaseModel):
     discordId = CharField(default="none provided")
     rating = IntegerField(default=1000)
     lastActive = DateTimeField(default=datetime.datetime.now)
+    steamName = CharField(default="nobody")
 
 class PlayerSchema(Schema):
     steamId = fields.Int()
     discordId = fields.Str(default="none provided")
     rating = fields.Int(default=1000)
     lastActive = fields.DateTime(default=datetime.datetime.now)
+    steamName = fields.Str(default="nobody")
 
     @post_load
     def make_user(self, data, **kwargs):
