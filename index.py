@@ -8,7 +8,7 @@ from peewee import *
 import requests
 
 app = Flask(__name__)
-#probably
+#probably bad practice to use one db connection but it's causing weird issues
 db.connect()
 steamApiKey = ""
 with open('steamApiKey.txt', 'r') as file:
@@ -51,7 +51,7 @@ def gamereport():
     dbMatch = match.ToDBObject()
     knownMatch = DbMatch.get_or_none(dbMatch.rngSeed)
 
-    if knownMatch:
+    if knownMatch != None:
         if knownMatch.confirmed == True:
             #db.close()
             return jsonify("duplicate report, match already confirmed."), 400
@@ -119,7 +119,8 @@ def getOrCreatePlayer(desiredSteamId):
         response = requests.get(f"http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={steamApiKey}&steamids={desiredSteamId}").json()
         if(response):
             player.steamName = response["response"]["players"][0]["personaname"]
-        player.save()
+    
+    player.save()
 
     #db.close()
     return player
