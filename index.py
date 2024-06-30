@@ -8,6 +8,7 @@ from peewee import *
 import requests
 
 app = Flask(__name__)
+db.connect()
 steamApiKey = ""
 with open('steamApiKey.txt', 'r') as file:
     steamApiKey = file.read().replace('\n', '')
@@ -32,7 +33,7 @@ def leaderboard():
     schema = PlayerSchema()
     for player in playerList:
         list.append(schema.dump(player))
-    db.close()
+    #db.close()
     return jsonify(list), 200
 
 #need JSON body for this one
@@ -51,7 +52,7 @@ def gamereport():
 
     if knownMatch:
         if knownMatch.confirmed == True:
-            db.close()
+            #db.close()
             return jsonify("duplicate report, match already confirmed."), 400
         else:
             #match confirmation
@@ -74,7 +75,7 @@ def gamereport():
                 "winnerNewRating": winner.rating,
                 "loserNewRating": loser.rating,
             }
-            db.close()
+            #db.close()
             return jsonify(results), 200
     else:
         dbMatch.save(force_insert=True) #this param is required because we have a custom private key
@@ -85,7 +86,7 @@ def gamereport():
         #we read the DB for rating, but do NOT write anything, when we recieve an unconfirmed match
         winnerHypotheticalRating = round(newRatings[0])
         loserHypotheticalRating = round(newRatings[1])
-        db.close()
+        #db.close()
 
         results = {
                 "!msg": "match resgistered, but not yet confirmed. here are the potential ratings",
@@ -105,7 +106,7 @@ def getrank():
     else:
         db.connect()
         player = getOrCreatePlayer(playerId)
-        db.close()
+        #db.close()
         return jsonify(player.rating), 200
 
 
@@ -119,5 +120,5 @@ def getOrCreatePlayer(desiredSteamId):
             player.steamName = response["response"]["players"][0]["personaname"]
         player.save()
 
-    db.close()
+    #db.close()
     return player
