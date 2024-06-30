@@ -8,6 +8,7 @@ from peewee import *
 import requests
 
 app = Flask(__name__)
+#probably
 db.connect()
 steamApiKey = ""
 with open('steamApiKey.txt', 'r') as file:
@@ -23,7 +24,7 @@ def test():
 
 @app.route('/leaderboard', methods=['GET'])
 def leaderboard():
-    db.connect()
+    #db.connect()
     amount = request.args.get('amount', default=10, type=int)
     playerList = DbPlayer.select().order_by(DbPlayer.rating.desc()).limit(amount)
     #i'm not really a python guy so there may be a cooler, shorter way to do this part
@@ -46,7 +47,7 @@ def gamereport():
     except ValidationError as err:
         return ["There was a problem with the format of the request.",err.messages], 400
 
-    db.connect()
+    #db.connect()
     dbMatch = match.ToDBObject()
     knownMatch = DbMatch.get_or_none(dbMatch.rngSeed)
 
@@ -104,7 +105,7 @@ def getrank():
     if playerId == -1:
         return jsonify("no player specified"), 400
     else:
-        db.connect()
+        #db.connect()
         player = getOrCreatePlayer(playerId)
         #db.close()
         return jsonify(player.rating), 200
