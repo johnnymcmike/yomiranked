@@ -110,6 +110,16 @@ def getrank():
         #db.close()
         return jsonify(player.rating), 200
 
+@app.route('/debugMatches', methods=['GET'])
+def debugMatches():
+    data = DbMatch.select()
+    list = []
+    schema = MatchSchema()
+    for match in data:
+        list.append(schema.dump(match))
+    #db.close()
+    return jsonify(list), 200
+
 
 #helper functions
 def getOrCreatePlayer(desiredSteamId):
