@@ -41,7 +41,7 @@ def leaderboard():
 @app.route('/gamereport', methods=['POST'])
 def gamereport():
     try:
-        data = request.get_json()
+        data = request.get_json(force=True)
         schema = MatchSchema()
         match = schema.load(data)
     except ValidationError as err:
