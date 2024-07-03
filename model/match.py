@@ -9,11 +9,12 @@ import datetime
 #i'll accept PRs lol
 
 class Match(object):
-    def __init__(self,  rngSeed, winner_steamId, loser_steamId, timestamp = datetime.datetime.now()):
+    def __init__(self,  rngSeed, winner_steamId, loser_steamId, confirmed = False, timestamp = datetime.datetime.now()):
         self.rngSeed = rngSeed
         self.winner_steamId = winner_steamId
         self.loser_steamId = loser_steamId
         self.timestamp = timestamp
+        self.confirmed = confirmed
     
     def ToDBObject(self):
         return DbMatch(
