@@ -36,7 +36,7 @@ class MatchSchema(Schema):
     winner_steamId = fields.Str()
     loser_steamId = fields.Str()
     timestamp = fields.DateTime()
-    confirmed = fields.Boolean(load_default = False, dump_default = True)
+    confirmed = fields.Boolean(load_default = False, dump_default = False)
 
     @post_load
     def make_user(self, data, **kwargs):
