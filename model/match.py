@@ -21,7 +21,8 @@ class Match(object):
             rngSeed=self.rngSeed,
             winner_steamId=self.winner_steamId,
             loser_steamId=self.loser_steamId,
-            timestamp=self.timestamp
+            timestamp=self.timestamp,
+            confirmed = self.confirmed
         )
 
 class DbMatch(BaseModel):

@@ -63,9 +63,11 @@ def gamereport():
             #need to assign it like this bc that function returns a tuple
             winner = getOrCreatePlayer(knownMatch.winner_steamId)
             loser = getOrCreatePlayer(knownMatch.loser_steamId)
+
             newRatings = CalculateRank(winner.rating, loser.rating)
             winner.rating = round(newRatings[0])
             loser.rating = round(newRatings[1])
+            
             winner.lastActive = datetime.datetime.now()
             loser.lastActive = datetime.datetime.now()
             winner.save()
@@ -101,7 +103,7 @@ def gamereport():
 
 @app.route('/getrank', methods=['GET'])
 def getrank():
-    playerId = request.args.get('player', default=-1, type=int)
+    playerId = request.args.get('player', default=-1, type=str)
     if playerId == -1:
         return jsonify("no player specified"), 400
     else:
