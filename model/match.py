@@ -27,8 +27,8 @@ class Match(object):
 
 class DbMatch(BaseModel):
     rngSeed = IntegerField(primary_key=True)
-    winner_steamId = CharField()
-    loser_steamId = CharField()
+    winner_steamId = TextField()
+    loser_steamId = TextField()
     timestamp = DateTimeField(default=datetime.datetime.now)
     confirmed = BooleanField(default=False)
 
