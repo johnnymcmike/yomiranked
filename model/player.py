@@ -22,7 +22,7 @@ class Player(object):
         )
 
 class DbPlayer(BaseModel):
-    steamId = TextField(primary_key=True)
+    steamId = TextField(unique=True)
     discordId = TextField(default="none provided")
     rating = IntegerField(default=1000)
     lastActive = DateTimeField(default=datetime.datetime.now)
