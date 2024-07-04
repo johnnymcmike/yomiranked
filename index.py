@@ -103,8 +103,8 @@ def gamereport():
 
 @app.route('/getrank', methods=['GET'])
 def getrank():
-    playerId = request.args.get('player', default=-1, type=str)
-    if playerId == -1:
+    playerId = request.args.get('player', default="-1", type=str)
+    if playerId == "-1":
         return jsonify("no player specified"), 400
     else:
         #db.connect()
