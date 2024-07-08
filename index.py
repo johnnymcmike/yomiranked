@@ -127,10 +127,9 @@ def debugMatches():
 def getOrCreatePlayer(desiredSteamId):
     #we assume that db is already connected here
     player, created = DbPlayer.get_or_create(steamId=desiredSteamId)
-    if created:
-        response = requests.get(f"http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={steamApiKey}&steamids={desiredSteamId}").json()
-        if(response):
-            player.steamName = response["response"]["players"][0]["personaname"]
+    response = requests.get(f"http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={steamApiKey}&steamids={desiredSteamId}").json()
+    if(response):
+        player.steamName = response["response"]["players"][0]["personaname"]
     
     player.save()
 
