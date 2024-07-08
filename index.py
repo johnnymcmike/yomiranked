@@ -25,7 +25,7 @@ def test():
 @app.route('/leaderboard', methods=['GET'])
 def leaderboard():
     #db.connect()
-    amount = request.args.get('amount', default=10, type=int)
+    amount = request.args.get('amount', default=50, type=int)
     playerList = DbPlayer.select().order_by(DbPlayer.rating.desc()).limit(amount)
     #i'm not really a python guy so there may be a cooler, shorter way to do this part
     #i know c# could do this in one line with linq
