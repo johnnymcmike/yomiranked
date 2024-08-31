@@ -25,13 +25,17 @@ def test():
 @app.route('/leaderboard', methods=['GET'])
 def leaderboard():
     #db.connect()
-    startPlace = request.args.get('start', default=0, type=int)
-    endPlace = request.args.get('end', default=49, type=int)
+    startPlace = request.args.get('start', default=1, type=int)
+    endPlace = request.args.get('end', default=50, type=int)
+    startPlace -= 1
+    endPlace -= 1
+
     playerList = DbPlayer.select().where(DbPlayer.rating != 1000).order_by(DbPlayer.rating.desc())
     if endPlace > len(playerList):
         endPlace = len(playerList) - 1
     goodIndices = list(range(startPlace, endPlace))
     subsetList = [playerList[i] for i in goodIndices]
+    
     #i'm not really a python guy so there may be a cooler, shorter way to do this part
     #i know c# could do this in one line with linq
     #lmk if you know anything
