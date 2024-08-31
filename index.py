@@ -25,17 +25,22 @@ def test():
 @app.route('/leaderboard', methods=['GET'])
 def leaderboard():
     #db.connect()
-    amount = request.args.get('amount', default=50, type=int)
-    playerList = DbPlayer.select().where(DbPlayer.rating != 1000).order_by(DbPlayer.rating.desc()).limit(amount)
+    startPlace = request.args.get('start', default=0, type=int)
+    endPlace = request.args.get('end', default=49, type=int)
+    playerList = DbPlayer.select().where(DbPlayer.rating != 1000).order_by(DbPlayer.rating.desc())
+    if endPlace > len(playerList):
+        endPlace = len(playerList) - 1
+    goodIndices = list(range(startPlace, endPlace))
+    subsetList = [playerList[i] for i in goodIndices]
     #i'm not really a python guy so there may be a cooler, shorter way to do this part
     #i know c# could do this in one line with linq
     #lmk if you know anything
-    list = []
+    newlist = []
     schema = PlayerSchema()
-    for player in playerList:
-        list.append(schema.dump(player))
+    for player in subsetList:
+        newlist.append(schema.dump(player))
     #db.close()
-    return jsonify(list), 200
+    return jsonify(newlist), 200
 
 #need JSON body for this one
 @app.route('/gamereport', methods=['POST'])
