@@ -31,11 +31,13 @@ def leaderboard():
     endPlace -= 1
 
     playerList = DbPlayer.select().where(DbPlayer.rating != 1000).order_by(DbPlayer.rating.desc())
-    if endPlace > len(playerList):
+    if endPlace > len(playerList) - 1:
         endPlace = len(playerList) - 1
+    if startPlace > endPlace:
+        return jsonify("invalid range bro"), 400
     goodIndices = list(range(startPlace, endPlace))
     subsetList = [playerList[i] for i in goodIndices]
-    
+
     #i'm not really a python guy so there may be a cooler, shorter way to do this part
     #i know c# could do this in one line with linq
     #lmk if you know anything
