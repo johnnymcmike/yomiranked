@@ -30,8 +30,8 @@ def leaderboard():
 
 
     playerList = DbPlayer.select().where(DbPlayer.rating != 1000).order_by(DbPlayer.rating.desc())
-    if endPlace > len(playerList) - 1:
-        endPlace = len(playerList) - 1
+    if endPlace > len(playerList):
+        endPlace = len(playerList)
     if startPlace > endPlace:
         return jsonify("invalid range bro"), 400
     goodIndices = list(range(startPlace, endPlace))
