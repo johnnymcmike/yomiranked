@@ -25,8 +25,8 @@ def test():
 @app.route('/leaderboard', methods=['GET'])
 def leaderboard():
     #db.connect()
-    startPlace = request.args.get('start', default=1, type=int)
-    endPlace = request.args.get('end', default=50, type=int)
+    startPlace = request.args.get('start', default=0, type=int)
+    endPlace = request.args.get('end', default=24, type=int)
 
 
     playerList = DbPlayer.select().where(DbPlayer.rating != 1000).order_by(DbPlayer.rating.desc())
