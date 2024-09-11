@@ -27,8 +27,7 @@ def leaderboard():
     #db.connect()
     startPlace = request.args.get('start', default=1, type=int)
     endPlace = request.args.get('end', default=50, type=int)
-    startPlace -= 1
-    endPlace -= 1
+
 
     playerList = DbPlayer.select().where(DbPlayer.rating != 1000).order_by(DbPlayer.rating.desc())
     if endPlace > len(playerList) - 1:
