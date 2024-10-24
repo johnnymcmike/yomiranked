@@ -164,7 +164,7 @@ def getOrCreatePlayer(desiredSteamId):
     response = requests.get(f"http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={steamApiKey}&steamids={desiredSteamId}").json()
     if(response):
         player.steamName = response["response"]["players"][0]["personaname"]
-    
+    player.steamHash = str(hash(desiredSteamId))
     player.save()
 
     #db.close()

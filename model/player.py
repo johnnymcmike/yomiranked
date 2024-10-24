@@ -24,7 +24,7 @@ class Player(object):
 
 class DbPlayer(BaseModel):
     steamId = TextField(unique=True)
-    steamHash = TextField(unique=True)
+    steamHash = TextField(unique=True, default="empty")
     discordId = TextField(default="none provided")
     rating = IntegerField(default=1000)
     lastActive = DateTimeField(default=datetime.datetime.now)
@@ -32,7 +32,7 @@ class DbPlayer(BaseModel):
 
 class PlayerSchema(Schema):
     steamId = fields.Str()
-    steamHash = fields.Str()
+    steamHash = fields.Str(default="empty")
     discordId = fields.Str(default="none provided")
     rating = fields.Int(default=1000)
     lastActive = fields.DateTime(default=datetime.datetime.now)
