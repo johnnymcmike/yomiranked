@@ -18,6 +18,13 @@ with open('steamApiKey.txt', 'r') as file:
 def index():
     return "hello from yomiranked!"
 
+@app.route('/gethash')
+def gethash():
+    input = request.args.get('id', default="0", type=str)
+    if len(input) >= 20:
+        return jsonify("too long"), 400
+    return jsonify(hash(input)), 200
+
 @app.route('/test')
 def test():
     return "hello from yomiranked!"

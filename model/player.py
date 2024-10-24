@@ -9,6 +9,7 @@ import datetime
 class Player(object):
     def __init__(self,  steamId, discordId, rating, lastActive = datetime.datetime.now(),steamName = "nobody"):
         self.steamId = steamId
+        self.steamHash = str(hash(steamId))
         self.discordId = discordId
         self.rating = rating
         self.lastActive = lastActive
@@ -23,6 +24,7 @@ class Player(object):
 
 class DbPlayer(BaseModel):
     steamId = TextField(unique=True)
+    steamHash = TextField(unique=True)
     discordId = TextField(default="none provided")
     rating = IntegerField(default=1000)
     lastActive = DateTimeField(default=datetime.datetime.now)
@@ -30,6 +32,7 @@ class DbPlayer(BaseModel):
 
 class PlayerSchema(Schema):
     steamId = fields.Str()
+    steamHash = fields.Str()
     discordId = fields.Str(default="none provided")
     rating = fields.Int(default=1000)
     lastActive = fields.DateTime(default=datetime.datetime.now)
