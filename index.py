@@ -162,7 +162,7 @@ def getOrCreatePlayer(desiredSteamId):
     #we assume that db is already connected here
     player, created = DbPlayer.get_or_create(steamId=desiredSteamId)
     p = requests.get(f"http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={steamApiKey}&steamids={desiredSteamId}")
-    print(p)
+    print(p.json()["response"])
     response = p.json()
     if(response):
         player.steamName = response["response"]["players"][0]["personaname"]
