@@ -25,6 +25,23 @@ def gethash():
         return jsonify("too long"), 400
     return jsonify(hash(input)), 200
 
+@app.route('/registerdiscord', methods=['POST'])
+def registerdiscord():
+    #takes in a steamHash and a discordId, searches the database for a matching steamHash, and updates the discordId
+    #db.connect()
+    data = request.get_json(force=True)
+    steamHash = data["steamHash"]
+    discordId = data["discordId"]
+    player = DbPlayer.get_or_none(DbPlayer.steamHash == steamHash)
+    if player == None:
+        #db.close()
+        return jsonify("no player found with that steamHash"), 400
+    else:
+        player.discordId = discordId
+        player.save()
+        #db.close()
+        return jsonify("discord id updated"), 200
+
 @app.route('/test')
 def test():
     return "hello from yomiranked!"
