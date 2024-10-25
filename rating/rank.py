@@ -2,7 +2,7 @@ from elote import EloCompetitor
 
 # Returns a list of 2 ints. First one is winner's rating, second one is loser's rating.
 def CalculateRank(winnerRating, loserRating):
-    winner = EloCompetitor(initial_rating= winnerRating)
+    winner = EloCompetitor(initial_rating= winnerRating * 1.02)
     loser = EloCompetitor(initial_rating= loserRating * 0.95)
     winner.beat(loser)
 
