@@ -7,10 +7,12 @@ import datetime
 #if any smart code people are reading this feel free to suggest improvements
 #i'll accept PRs lol
 class Player(object):
-    def __init__(self,  steamId, discordId, rating, lastActive = datetime.datetime.now(),steamName = "nobody"):
+    def __init__(self,  steamId, discordId, rating, yomicoin = 0, banned = False, lastActive = datetime.datetime.now(),steamName = "nobody"):
         self.steamId = steamId
         self.steamHash = str(hash(steamId))
         self.discordId = discordId
+        self.yomicoin = yomicoin
+        self.banned = banned
         self.rating = rating
         self.lastActive = lastActive
         self.steamName = steamName
@@ -26,6 +28,8 @@ class DbPlayer(BaseModel):
     steamId = TextField(unique=True)
     steamHash = TextField(default="empty")
     discordId = TextField(default="none provided")
+    yomicoin = IntegerField(default=0)
+    banned = BooleanField(default=False)
     rating = IntegerField(default=1000)
     lastActive = DateTimeField(default=datetime.datetime.now)
     steamName = TextField(default="nobody")
@@ -34,6 +38,8 @@ class PlayerSchema(Schema):
     steamId = fields.Str()
     steamHash = fields.Str(default="empty")
     discordId = fields.Str(default="none provided")
+    yomicoin = fields.Int(default=0)
+    banned = fields.Bool(load_default = False, dump_default = False)
     rating = fields.Int(default=1000)
     lastActive = fields.DateTime(default=datetime.datetime.now)
     steamName = fields.Str(default="nobody")

@@ -98,9 +98,14 @@ def gamereport():
             winner = getOrCreatePlayer(knownMatch.winner_steamId)
             loser = getOrCreatePlayer(knownMatch.loser_steamId)
 
+            knownMatch.winner_eloBefore = winner.rating
+            knownMatch.loser_eloBefore = loser.rating
             newRatings = CalculateRank(winner.rating, loser.rating)
+            knownMatch.winner_eloAfter = round(newRatings[0])
+            knownMatch.loser_eloAfter = round(newRatings[1])
             winner.rating = round(newRatings[0])
             loser.rating = round(newRatings[1])
+            dbMatch.save()
             
             winner.lastActive = datetime.datetime.now()
             loser.lastActive = datetime.datetime.now()
