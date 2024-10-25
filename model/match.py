@@ -9,7 +9,7 @@ import datetime
 #i'll accept PRs lol
 
 class Match(object):
-    def __init__(self,  rngSeed, winner_steamId, loser_steamId, winner_eloBefore, winner_eloAfter, loser_eloBefore, loser_eloAfter, confirmed = False, timestamp = datetime.datetime.now()):
+    def __init__(self,  rngSeed, winner_steamId, loser_steamId, winner_eloBefore = 0, winner_eloAfter = 0, loser_eloBefore = 0, loser_eloAfter = 0, confirmed = False, timestamp = datetime.datetime.now()):
         self.rngSeed = rngSeed
         self.winner_steamId = winner_steamId
         self.winner_eloBefore = winner_eloBefore
