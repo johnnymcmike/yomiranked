@@ -105,7 +105,7 @@ def gamereport():
             knownMatch.loser_eloAfter = round(newRatings[1])
             winner.rating = round(newRatings[0])
             loser.rating = round(newRatings[1])
-            dbMatch.save()
+            knownMatch.save()
             
             winner.lastActive = datetime.datetime.now()
             loser.lastActive = datetime.datetime.now()
