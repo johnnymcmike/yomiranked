@@ -24,7 +24,7 @@ class Player(object):
 
 class DbPlayer(BaseModel):
     steamId = TextField(unique=True)
-    steamHash = TextField(unique=True, default="empty")
+    steamHash = TextField(default="empty")
     discordId = TextField(default="none provided")
     rating = IntegerField(default=1000)
     lastActive = DateTimeField(default=datetime.datetime.now)
