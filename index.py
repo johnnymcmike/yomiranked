@@ -143,8 +143,6 @@ def getrank():
     else:
         #db.connect()
         player = getOrCreatePlayer(playerId)
-        if player is None:
-            return jsonify("something fucked up"), 500
         #db.close()
         return jsonify(player.rating), 200
 
@@ -163,15 +161,13 @@ def debugMatches():
 def getOrCreatePlayer(desiredSteamId):
     #we assume that db is already connected here
     player, created = DbPlayer.get_or_create(steamId=desiredSteamId)
-    p = requests.get(f"http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={steamApiKey}&steamids={desiredSteamId}")
-    print(p)
-    if p is None:
-        return None
-    response = p.json()
-    if(response):
-        player.steamName = response["response"]["players"][0]["personaname"]
-    player.steamHash = str(hash(desiredSteamId))
-    player.save()
+    if(created or player.lastActive < datetime.datetime.now() - datetime.timedelta(days=5)):
+        p = requests.get(f"http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={steamApiKey}&steamids={desiredSteamId}")
+        response = p.json()
+        if(response):
+            player.steamName = response["response"]["players"][0]["personaname"]
+        player.steamHash = str(hash(desiredSteamId))
+        player.save()
 
     #db.close()
     return player
