@@ -14,7 +14,7 @@ def CalculateRank(winnerRating, loserRating):
     if loseResult < 500:
         loseResult = 500
     
-    return [winResult, loseResult]
+    return [winResult, loseResult * 0.98]
 
 def WinProbability(p1rating, p2rating):
     p1 = EloCompetitor(initial_rating=p1rating)
