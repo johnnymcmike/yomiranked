@@ -54,7 +54,7 @@ def leaderboard():
     endPlace = request.args.get('end', default=24, type=int)
 
 
-    one_week_ago = datetime.datetime.now - timedelta(weeks=1)
+    one_week_ago = datetime.datetime.now() - timedelta(weeks=1)
     playerList = DbPlayer.select().where(DbPlayer.rating != 1000 and DbPlayer.lastActive > one_week_ago).order_by(DbPlayer.rating.desc())
     if endPlace > len(playerList):
         endPlace = len(playerList)
