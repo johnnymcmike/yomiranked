@@ -4,6 +4,10 @@ from elote import EloCompetitor
 def CalculateRank(winnerRating, loserRating):
     winner = EloCompetitor(initial_rating= winnerRating)
     loser = EloCompetitor(initial_rating= loserRating)
+    winner._base_rating = 1000
+    loser._base_rating = 1000
+    winner._k_factor = 50
+    loser._k_factor = 50
     winner.beat(loser)
 
     winResult = winner.rating

@@ -1,3 +1,4 @@
+from datetime import timedelta
 from flask import Flask, jsonify, request
 from model.match import *
 from model.player import *
@@ -53,7 +54,8 @@ def leaderboard():
     endPlace = request.args.get('end', default=24, type=int)
 
 
-    playerList = DbPlayer.select().where(DbPlayer.rating != 1000).order_by(DbPlayer.rating.desc())
+    one_week_ago = datetime.now() - timedelta(weeks=1)
+    playerList = DbPlayer.select().where(DbPlayer.rating != 1000 and DbPlayer.lastActive > one_week_ago).order_by(DbPlayer.rating.desc())
     if endPlace > len(playerList):
         endPlace = len(playerList)
     if startPlace > endPlace:
