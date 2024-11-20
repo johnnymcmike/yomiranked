@@ -43,6 +43,16 @@ def registerdiscord():
         #db.close()
         return jsonify("discord id updated"), 200
 
+@app.route("/disc2steam", methods=['GET'])
+def disc2steam():
+    #takes in a discordId and returns the steamHash
+    discordId = request.args.get('discordId', default="0", type=str)
+    player = DbPlayer.get_or_none(DbPlayer.discordId == discordId)
+    if player == None:
+        return jsonify("no player found with that discordId"), 400
+    else:
+        return jsonify(player.steamId), 200
+
 @app.route('/test')
 def test():
     return "hello from yomiranked!"
