@@ -24,7 +24,8 @@ def gethash():
     input = request.args.get('id', default="0", type=str)
     if len(input) >= 20:
         return jsonify("too long"), 400
-    return jsonify(str(hash(input))), 200
+    player = DbPlayer.get_or_none(DbPlayer.steamId == input)
+    return jsonify(str(player.steamHash)), 200
 
 @app.route('/registerdiscord', methods=['POST'])
 def registerdiscord():
