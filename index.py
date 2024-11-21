@@ -28,7 +28,10 @@ def gethash():
     if player == None:
         #db.close()
         return jsonify("no player found with that steamHash"), 400
-    return jsonify(str(player.steamHash)), 200
+    value = str(hash(player.steamId))
+    player.steamHash = value
+    player.save()
+    return jsonify(str(hash(player.steamId))), 200
 
 @app.route('/registerdiscord', methods=['POST'])
 def registerdiscord():
@@ -49,7 +52,7 @@ def registerdiscord():
 
 @app.route("/disc2steam", methods=['GET'])
 def disc2steam():
-    #takes in a discordId and returns the steamHash
+    #takes in a discordId and returns the steamId
     discordId = request.args.get('discordId', default="0", type=str)
     player = DbPlayer.get_or_none(DbPlayer.discordId == discordId)
     if player == None:
