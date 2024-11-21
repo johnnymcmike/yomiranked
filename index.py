@@ -24,7 +24,7 @@ def gethash():
     input = request.args.get('id', default="0", type=str)
     if len(input) >= 20:
         return jsonify("too long"), 400
-    return jsonify(hash(input)), 200
+    return jsonify(str(hash(input))), 200
 
 @app.route('/registerdiscord', methods=['POST'])
 def registerdiscord():
