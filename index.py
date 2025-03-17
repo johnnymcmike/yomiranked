@@ -1,9 +1,10 @@
 from datetime import timedelta
+from elote import GlickoCompetitor
 from flask import Flask, jsonify, request
 from model.match import *
 from model.player import *
 from model.basics import db
-from rating.rank import CalculateRank
+from rating.rank import CalculateRank, CalculateRankGlicko
 from marshmallow import ValidationError
 from peewee import *
 import requests
@@ -126,14 +127,23 @@ def gamereport():
             #need to assign it like this bc that function returns a tuple
             winner = getOrCreatePlayer(knownMatch.winner_steamId)
             loser = getOrCreatePlayer(knownMatch.loser_steamId)
-
+    
             knownMatch.winner_eloBefore = winner.rating
             knownMatch.loser_eloBefore = loser.rating
-            newRatings = CalculateRank(winner.rating, loser.rating)
-            knownMatch.winner_eloAfter = round(newRatings[0])
-            knownMatch.loser_eloAfter = round(newRatings[1])
-            winner.rating = round(newRatings[0])
-            loser.rating = round(newRatings[1])
+            newRatings = CalculateRankGlicko(winner.glickoData, loser.glickoData)
+            wNewGData = newRatings[0]
+            lNewGData = newRatings[1]
+
+            winner.glickoData = wNewGData
+            loser.glickoData = lNewGData
+
+            wNewRating = round(newRatings[2])
+            lNewRating = round(newRatings[3])
+            knownMatch.winner_eloAfter = wNewRating
+            knownMatch.loser_eloAfter = lNewRating
+            winner.rating = wNewRating
+            loser.rating = lNewRating
+
             knownMatch.save()
 
             requests.post("http://localhost:8081/reportmatch", json=
@@ -211,6 +221,12 @@ def getOrCreatePlayer(desiredSteamId):
         if(response):
             player.steamName = response["response"]["players"][0]["personaname"]
         player.steamHash = str(hash(desiredSteamId))
+        player.save()
+    if(created):
+        comp = GlickoCompetitor(initial_rating=1000)
+        gdata = comp.export_state()
+        #rating,,rd,,_c,,_q
+        player.glickoData = f"{gdata['initial_rating']},,{gdata['initial_rd']},,{gdata['class_vars']['_c']},,{gdata['class_vars']['_q']}"
         player.save()
 
     #db.close()

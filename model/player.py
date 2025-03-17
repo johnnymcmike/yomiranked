@@ -3,11 +3,8 @@ from peewee import *
 from model.basics import BaseModel, db
 import datetime
 
-#i'm not really sure whether having the database classes and the Player/Match classes separate makes any sense
-#if any smart code people are reading this feel free to suggest improvements
-#i'll accept PRs lol
 class Player(object):
-    def __init__(self,  steamId, discordId, rating, yomicoin = 0, banned = False, lastActive = datetime.datetime.now(),steamName = "nobody"):
+    def __init__(self, steamId, discordId, rating, yomicoin=0, banned=False, lastActive=datetime.datetime.now(), steamName="nobody", glickoData="---"):
         self.steamId = steamId
         self.steamHash = str(hash(steamId))
         self.discordId = discordId
@@ -16,12 +13,14 @@ class Player(object):
         self.rating = rating
         self.lastActive = lastActive
         self.steamName = steamName
+        self.glickoData = glickoData
     
     def ToDBObject(self):
         return DbPlayer(
             steamId=self.steamId,
             discordId=self.discordId,
-            rating=self.rating
+            rating=self.rating,
+            glickoData=self.glickoData
         )
 
 class DbPlayer(BaseModel):
@@ -33,16 +32,18 @@ class DbPlayer(BaseModel):
     rating = IntegerField(default=1000)
     lastActive = DateTimeField(default=datetime.datetime.now)
     steamName = TextField(default="nobody")
+    glickoData = TextField(default="---")
 
 class PlayerSchema(Schema):
     steamId = fields.Str()
     steamHash = fields.Str(default="empty")
     discordId = fields.Str(default="none provided")
     yomicoin = fields.Int(default=0)
-    banned = fields.Bool(load_default = False, dump_default = False)
+    banned = fields.Bool(load_default=False, dump_default=False)
     rating = fields.Int(default=1000)
     lastActive = fields.DateTime(default=datetime.datetime.now)
     steamName = fields.Str(default="nobody")
+    glickoData = fields.Str(default="---")
 
     @post_load
     def make_user(self, data, **kwargs):
