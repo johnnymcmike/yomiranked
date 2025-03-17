@@ -6,12 +6,12 @@ def CalculateRankGlicko(winnerData, loserData):
     #player object parameters
     wData = winnerData.split(",,")
     lData = loserData.split(",,")
-    winG = GlickoCompetitor(wData[0], wData[1])
-    winG._c = wData[2]
-    winG._q = wData[3]
-    loseG = GlickoCompetitor(lData[0], lData[1])
-    loseG._c = lData[2]
-    loseG._q = lData[3]
+    winG = GlickoCompetitor(float(wData[0]), float(wData[1]))
+    winG._c = float(wData[2])
+    winG._q = float(wData[3])
+    loseG = GlickoCompetitor(float(lData[0]), float(lData[1]))
+    loseG._c = float(lData[2])
+    loseG._q = float(lData[3])
 
     winG.beat(loseG)
 
@@ -21,7 +21,6 @@ def CalculateRankGlicko(winnerData, loserData):
     loseData = f"{loseState['initial_rating']},,{loseState['initial_rd']},,{loseState['class_vars']['_c']},,{loseState['class_vars']['_q']}"
     #initial_rating,,initial_rd,,_c,,_q
     return [winData, loseData, winG.rating, loseG.rating]
-    pass
 
 # Returns a list of 2 ints. First one is winner's rating, second one is loser's rating.
 
