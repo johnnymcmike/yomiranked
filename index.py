@@ -143,7 +143,7 @@ def gamereport():
             knownMatch.loser_eloAfter = lNewRating
             winner.rating = wNewRating
             loser.rating = lNewRating
-
+            winner.yomicoin += 10
             knownMatch.save()
 
             requests.post("http://localhost:8081/reportmatch", json=
