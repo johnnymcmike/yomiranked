@@ -53,7 +53,7 @@ def CalculateRankEloNew(winner_rating, loser_rating, k=200):
     new_loser_rating = loser_rating + k * (0 - expected_loser)
 
     teehee = 0
-    if winner_rating == 1200 and loser_rating == 1200:
+    if winner_rating == 1250 and loser_rating == 1250:
         teehee = ((random.random() * 5) * random.choice([-1,1])) + random.random()
 
     if new_winner_rating < 500:
