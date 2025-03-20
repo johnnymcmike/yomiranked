@@ -4,7 +4,7 @@ from flask import Flask, jsonify, request
 from model.match import *
 from model.player import *
 from model.basics import db
-from rating.rank import CalculateRank, CalculateRankGlicko
+from rating.rank import CalculateRankEloNew
 from marshmallow import ValidationError
 from peewee import *
 import requests
@@ -130,15 +130,15 @@ def gamereport():
     
             knownMatch.winner_eloBefore = winner.rating
             knownMatch.loser_eloBefore = loser.rating
-            newRatings = CalculateRankGlicko(winner.glickoData, loser.glickoData)
-            wNewGData = newRatings[0]
-            lNewGData = newRatings[1]
+            newRatings = CalculateRankEloNew(winner.rating, loser.rating)
+            # wNewGData = newRatings[0]
+            # lNewGData = newRatings[1]
 
-            winner.glickoData = wNewGData
-            loser.glickoData = lNewGData
+            # winner.glickoData = wNewGData
+            # loser.glickoData = lNewGData
 
-            wNewRating = round(newRatings[2])
-            lNewRating = round(newRatings[3])
+            wNewRating = round(newRatings[0])
+            lNewRating = round(newRatings[1])
             knownMatch.winner_eloAfter = wNewRating
             knownMatch.loser_eloAfter = lNewRating
             winner.rating = wNewRating
@@ -173,7 +173,7 @@ def gamereport():
 
         winner = getOrCreatePlayer(dbMatch.winner_steamId)
         loser = getOrCreatePlayer(dbMatch.loser_steamId)
-        newRatings = CalculateRank(winner.rating, loser.rating)
+        newRatings = CalculateRankEloNew(winner.rating, loser.rating)
         #we read the DB for rating, but do NOT write anything, when we recieve an unconfirmed match
         winnerHypotheticalRating = round(newRatings[0])
         loserHypotheticalRating = round(newRatings[1])
@@ -222,12 +222,12 @@ def getOrCreatePlayer(desiredSteamId):
             player.steamName = response["response"]["players"][0]["personaname"]
         player.steamHash = str(hash(desiredSteamId))
         player.save()
-    if(created):
-        comp = GlickoCompetitor(initial_rating=1000)
-        gdata = comp.export_state()
-        #rating,,rd,,_c,,_q
-        player.glickoData = f"{gdata['initial_rating']},,{gdata['initial_rd']},,{gdata['class_vars']['_c']},,{gdata['class_vars']['_q']}"
-        player.save()
+    # if(created):
+    #     comp = GlickoCompetitor(initial_rating=1000)
+    #     gdata = comp.export_state()
+    #     #rating,,rd,,_c,,_q
+    #     player.glickoData = f"{gdata['initial_rating']},,{gdata['initial_rd']},,{gdata['class_vars']['_c']},,{gdata['class_vars']['_q']}"
+    #     player.save()
 
     #db.close()
     return player
