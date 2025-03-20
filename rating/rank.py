@@ -38,7 +38,7 @@ def rd_update_after_game(rd,d2):
 def rd_update_before_game(rd,c,t):
     return min(sqrt(rd**2 + t * c**2),350)
 
-print(player1update(1500, 350, 1, 1000, 350, 1, 1))
+#print(player1update(1500, 350, 1, 1000, 350, 1, 1))
 
 
 
