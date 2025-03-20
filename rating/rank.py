@@ -6,10 +6,14 @@ def CalculateRankGlicko(winnerData, loserData):
     #player object parameters
     wData = winnerData.split(",,")
     lData = loserData.split(",,")
-    winG = GlickoCompetitor(float(wData[0]), float(wData[1]))
+    winG = GlickoCompetitor(initial_rating=1000)
+    winG.rating = float(wData[0])
+    winG.rd = float(wData[1])
     winG._c = float(wData[2])
     winG._q = float(wData[3])
-    loseG = GlickoCompetitor(float(lData[0]), float(lData[1]))
+    loseG = GlickoCompetitor(initial_rating=1000)
+    loseG.rating = float(lData[0])
+    loseG.rd = float(lData[1])
     loseG._c = float(lData[2])
     loseG._q = float(lData[3])
 
