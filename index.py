@@ -146,15 +146,18 @@ def gamereport():
             winner.yomicoin += 10
             knownMatch.save()
 
-            requests.post("http://localhost:8081/reportmatch", json=
-                          {"winnerName": winner.steamName, 
-                           "loserName": loser.steamName,
-                           "winnerEloBefore": knownMatch.winner_eloBefore,
-                           "loserEloBefore": knownMatch.loser_eloBefore,
-                           "winnerEloCurrent": knownMatch.winner_eloAfter,
-                           "loserEloCurrent": knownMatch.loser_eloAfter,
-                           "winnerSteamId": winner.steamId,
-                           "loserSteamId": loser.steamId,})
+            try:
+                requests.post("http://localhost:8081/reportmatch", json=
+                            {"winnerName": winner.steamName, 
+                            "loserName": loser.steamName,
+                            "winnerEloBefore": knownMatch.winner_eloBefore,
+                            "loserEloBefore": knownMatch.loser_eloBefore,
+                            "winnerEloCurrent": knownMatch.winner_eloAfter,
+                            "loserEloCurrent": knownMatch.loser_eloAfter,
+                            "winnerSteamId": winner.steamId,
+                            "loserSteamId": loser.steamId,})
+            except: 
+                print("Failed to connect to the Ranked Discord Bot.")
             
             winner.lastActive = datetime.datetime.now()
             loser.lastActive = datetime.datetime.now()
