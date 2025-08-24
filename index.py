@@ -127,7 +127,8 @@ def gamereport():
             #need to assign it like this bc that function returns a tuple
             winner = getOrCreatePlayer(knownMatch.winner_steamId)
             loser = getOrCreatePlayer(knownMatch.loser_steamId)
-    
+            if winner.banned == 1 or loser.banned == 1:
+                return jsonify("one of the players is banned"), 403
             knownMatch.winner_eloBefore = winner.rating
             knownMatch.loser_eloBefore = loser.rating
             newRatings = CalculateRankEloNew(winner.rating, loser.rating)
@@ -173,6 +174,8 @@ def gamereport():
 
         winner = getOrCreatePlayer(dbMatch.winner_steamId)
         loser = getOrCreatePlayer(dbMatch.loser_steamId)
+        if winner.banned == 1 or loser.banned == 1:
+            return jsonify("one of the players is banned"), 403
         newRatings = CalculateRankEloNew(winner.rating, loser.rating)
         #we read the DB for rating, but do NOT write anything, when we recieve an unconfirmed match
         winnerHypotheticalRating = round(newRatings[0])
